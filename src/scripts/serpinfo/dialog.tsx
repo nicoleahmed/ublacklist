@@ -41,18 +41,16 @@ export function openDialog(
 ) {
   const state = storageStore.get();
   const entryProps = { ...props, url };
-  const onBlocked = () =>
-    void saveToLocalStorage(
-      { blacklist: ruleset.toString() },
-      "content-script",
-    );
+  const onBlocked = (newSource: string) =>
+    void saveToLocalStorage({ blacklist: newSource }, "content-script");
   const shouldSkipDialog = event.shiftKey
     ? !state.skipBlockDialog
     : state.skipBlockDialog;
   if (shouldSkipDialog) {
-    ruleset.createPatch(entryProps, state.blockWholeSite);
-    ruleset.applyPatch();
-    onBlocked();
+    const patch = ruleset.createPatch(null, entryProps, {
+      useRegistrableDomain: state.blockWholeSite,
+    });
+    onBlocked(ruleset.applyPatch(patch));
     return;
   }
   const dialogRoot = getDialogRoot();

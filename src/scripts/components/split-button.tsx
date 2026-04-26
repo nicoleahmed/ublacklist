@@ -6,6 +6,17 @@ import { MENU_ITEM_CLASS, MENU_Z_INDEX } from "./constants.ts";
 import { TemplateIcon } from "./icon.tsx";
 import { useClassName } from "./utilities.ts";
 
+// Get the deepest active element across shadow root boundaries.
+// `document.activeElement` stops at shadow host; this walks into shadow roots
+// so we can correctly identify the focused menu item inside a shadow tree.
+function getDeepActiveElement(): Element | null {
+  let active: Element | null = document.activeElement;
+  while (active?.shadowRoot?.activeElement) {
+    active = active.shadowRoot.activeElement;
+  }
+  return active;
+}
+
 function moveFocus(
   body: HTMLDivElement,
   key: "ArrowUp" | "ArrowDown" | "Home" | "End",
@@ -17,7 +28,7 @@ function moveFocus(
     return;
   }
   const currentIndex = (items as readonly (Element | null)[]).indexOf(
-    document.activeElement,
+    getDeepActiveElement(),
   );
   let nextIndex: number;
   if (key === "ArrowUp") {
@@ -35,39 +46,33 @@ function moveFocus(
 }
 
 export type SplitButtonProps = {
-  primary?: boolean;
-  disabled?: boolean;
-  menuDisabled?: boolean;
-  onClick: () => void;
   children: React.ReactNode;
+  className?: string | undefined;
+  disabled?: boolean;
   menu: React.ReactNode;
   menuAriaLabel: string;
+  menuClassName?: string | undefined;
+  menuDisabled?: boolean;
   placement?: "top" | "bottom";
-  autoFocus?: boolean;
+  primary?: boolean;
+  onClick: () => void;
 };
 
 export const SplitButton: React.FC<SplitButtonProps> = ({
-  primary = false,
-  disabled = false,
-  menuDisabled = false,
-  onClick,
   children,
+  className,
+  disabled = false,
   menu,
   menuAriaLabel,
+  menuClassName,
+  menuDisabled = false,
   placement = "bottom",
-  autoFocus = false,
+  primary = false,
+  onClick,
 }) => {
   const [open, setOpen] = useState(false);
-  const mainRef = useRef<HTMLButtonElement>(null);
   const arrowRef = useRef<HTMLButtonElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: only run on mount
-  useLayoutEffect(() => {
-    if (autoFocus) {
-      mainRef.current?.focus();
-    }
-  }, []);
 
   useLayoutEffect(() => {
     if (open) {
@@ -204,10 +209,9 @@ export const SplitButton: React.FC<SplitButtonProps> = ({
       }}
     >
       <button
-        className={mainClassName}
+        className={className ? `${mainClassName} ${className}` : mainClassName}
         disabled={disabled}
         onClick={onClick}
-        ref={mainRef}
         type="button"
       >
         {children}
@@ -216,7 +220,9 @@ export const SplitButton: React.FC<SplitButtonProps> = ({
         aria-expanded={open}
         aria-haspopup="menu"
         aria-label={menuAriaLabel}
-        className={arrowClassName}
+        className={
+          menuClassName ? `${arrowClassName} ${menuClassName}` : arrowClassName
+        }
         disabled={menuDisabled}
         onClick={() => setOpen(!open)}
         ref={arrowRef}
@@ -245,6 +251,12 @@ export const SplitButton: React.FC<SplitButtonProps> = ({
         onKeyDown={(e) => {
           if (e.key === "Escape") {
             e.preventDefault();
+            e.stopPropagation();
+            setOpen(false);
+            arrowRef.current?.focus();
+          } else if (e.key === "Tab") {
+            e.preventDefault();
+            e.stopPropagation();
             setOpen(false);
             arrowRef.current?.focus();
           } else if (
@@ -254,6 +266,7 @@ export const SplitButton: React.FC<SplitButtonProps> = ({
             e.key === "End"
           ) {
             e.preventDefault();
+            e.stopPropagation();
             moveFocus(e.currentTarget, e.key);
           }
         }}

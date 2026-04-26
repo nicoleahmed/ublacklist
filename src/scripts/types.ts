@@ -1,5 +1,4 @@
 import type dayjs from "dayjs";
-import type { RulesetMatches } from "./interactive-ruleset.ts";
 import type {
   SerpInfoSettings,
   Serializable as SerpInfoSettingsSerializable,
@@ -202,9 +201,3 @@ export type Subscription = {
 
 export type Subscriptions = Record<SubscriptionId, Subscription>;
 // #endregion Subscriptions
-
-// #region MatchingRules
-export type MatchingRuleKind = keyof Omit<RulesetMatches, "rulesetName">;
-
-export type MatchingRulesText = Record<MatchingRuleKind, string>;
-// #endregion MatchingRules

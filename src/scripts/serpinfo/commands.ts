@@ -340,6 +340,7 @@ export type ButtonCommandContext = ElementCommandContext & {
 export type ButtonProps = {
   blockLabel: string;
   unblockLabel: string;
+  unhighlightLabel: string;
   onClick: (event: MouseEvent) => void;
 };
 
@@ -420,6 +421,9 @@ const buttonCommandImpl: ButtonCommandImpl = {
         <span part="unblock" aria-label=${context.buttonProps.unblockLabel}>
           ${iconSVG}
         </span>
+        <span part="unhighlight" aria-label=${context.buttonProps.unhighlightLabel}>
+          ${iconSVG}
+        </span>
       </button>
     `;
     shadowRoot.querySelector("button")?.addEventListener("click", (event) => {
@@ -495,6 +499,9 @@ const buttonCommandImpl: ButtonCommandImpl = {
         <span part="unblock">
           ${context.buttonProps.unblockLabel}
         </span>
+        <span part="unhighlight">
+          ${context.buttonProps.unhighlightLabel}
+        </span>
       </button>
     `;
     shadowRoot.querySelector("button")?.addEventListener("click", (event) => {
@@ -512,10 +519,14 @@ const buttonCommandImpl: ButtonCommandImpl = {
 
 function setStaticButtonStyle() {
   setStaticGlobalStyle("button", {
-    [`[${a.result}][${a.block}] .${c.button}::part(block)`]: {
+    [`[${a.result}]:is([${a.block}], [${a.highlight}]) .${c.button}::part(block)`]:
+      {
+        display: "none",
+      },
+    [`[${a.result}]:not([${a.block}]) .${c.button}::part(unblock)`]: {
       display: "none",
     },
-    [`[${a.result}]:not([${a.block}]) .${c.button}::part(unblock)`]: {
+    [`[${a.result}]:not([${a.highlight}]) .${c.button}::part(unhighlight)`]: {
       display: "none",
     },
   });
