@@ -18,7 +18,6 @@ import {
   EmbeddedDialog,
 } from "./components/dialog.tsx";
 import { Icon } from "./components/icon.tsx";
-import { Input } from "./components/input.tsx";
 import { ControlLabel, LabelWrapper } from "./components/label.tsx";
 import { Row, RowItem } from "./components/row.tsx";
 import { StylesProvider } from "./components/styles.tsx";
@@ -27,7 +26,6 @@ import { darkTheme, lightTheme, ThemeProvider } from "./components/theme.tsx";
 import { useClassName, usePrevious } from "./components/utilities.ts";
 import type { InteractiveRuleset } from "./interactive-ruleset.ts";
 import { translate } from "./locales.ts";
-import { PathDepth } from "./path-depth.ts";
 import { getRegistrableDomain } from "./registrable-domain.ts";
 import type { LinkProps } from "./ruleset/ruleset.ts";
 import type { DialogTheme, MatchingRulesText } from "./types.ts";
@@ -36,7 +34,6 @@ import { getMatchingRulesText, makeAltURL, svgToDataURL } from "./utilities.ts";
 type BlockDialogContentProps = {
   blockWholeSite: boolean;
   close: () => void;
-  enablePathDepth: boolean;
   enableMatchingRules: boolean;
   entryProps: LinkProps;
   id: string;
@@ -49,7 +46,6 @@ type BlockDialogContentProps = {
 const BlockDialogContent: React.FC<BlockDialogContentProps> = ({
   blockWholeSite,
   close,
-  enablePathDepth,
   enableMatchingRules,
   entryProps,
   id,
@@ -65,8 +61,6 @@ const BlockDialogContent: React.FC<BlockDialogContentProps> = ({
     detailsOpen: false,
     matchingRulesOpen: false,
     matchingRulesText: null as MatchingRulesText | null,
-    pathDepth: null as PathDepth | null,
-    depth: "",
     rulesToAdd: "",
     rulesToAddValid: false,
     rulesToRemove: "",
@@ -86,8 +80,6 @@ const BlockDialogContent: React.FC<BlockDialogContentProps> = ({
       state.detailsOpen = false;
       state.matchingRulesOpen = false;
       state.matchingRulesText = null;
-      state.pathDepth = enablePathDepth ? new PathDepth(url) : null;
-      state.depth = "0";
       state.rulesToAdd = patch.rulesToAdd;
       state.rulesToAddValid = true;
       state.rulesToRemove = patch.rulesToRemove;
@@ -98,8 +90,6 @@ const BlockDialogContent: React.FC<BlockDialogContentProps> = ({
       state.detailsOpen = false;
       state.matchingRulesOpen = false;
       state.matchingRulesText = null;
-      state.pathDepth = null;
-      state.depth = "";
       state.rulesToAdd = "";
       state.rulesToAddValid = false;
       state.rulesToRemove = "";
@@ -172,50 +162,6 @@ const BlockDialogContent: React.FC<BlockDialogContentProps> = ({
                     )}
                   </RowItem>
                 </Row>
-                {enablePathDepth && (
-                  <Row>
-                    <RowItem expanded>
-                      <LabelWrapper disabled={state.disabled} fullWidth>
-                        <ControlLabel for={`${id}-depth`}>
-                          {translate("popup_pathDepth")}
-                        </ControlLabel>
-                      </LabelWrapper>
-                      {open && (
-                        <Input
-                          disabled={state.disabled}
-                          id={`${id}-depth`}
-                          max={state.pathDepth?.maxDepth() ?? 0}
-                          min={0}
-                          type="number"
-                          value={state.depth}
-                          onChange={(e) => {
-                            const depth = e.currentTarget.value;
-                            if (
-                              !state.pathDepth ||
-                              !depth ||
-                              !e.currentTarget.validity.valid
-                            ) {
-                              setState((s) => ({ ...s, depth }));
-                              return;
-                            }
-                            const rulesToAdd =
-                              state.pathDepth.suggestMatchPattern(
-                                Number(depth),
-                                state.unblock,
-                              );
-                            const patch = ruleset.modifyPatch({ rulesToAdd });
-                            setState((s) => ({
-                              ...s,
-                              depth,
-                              rulesToAdd,
-                              rulesToAddValid: Boolean(patch),
-                            }));
-                          }}
-                        />
-                      )}
-                    </RowItem>
-                  </Row>
-                )}
                 <Row>
                   <RowItem expanded>
                     <LabelWrapper fullWidth>

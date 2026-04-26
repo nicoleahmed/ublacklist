@@ -60,7 +60,6 @@ export function openDialog(
     <BlockDialog
       blockWholeSite={state.blockWholeSite}
       close={closeDialog}
-      enablePathDepth={state.enablePathDepth}
       enableMatchingRules={state.enableMatchingRules}
       entryProps={entryProps}
       open={true}

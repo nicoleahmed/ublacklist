@@ -71,10 +71,6 @@
     "message": "Page URL",
     "description": "Label for the textarea showing the page URL."
   },
-  "popup_pathDepth": {
-    "message": "Depth",
-    "description": "Label for the input showing the path depth for rules to be added."
-  },
   "popup_pageTitleLabel": {
     "message": "Page title",
     "description": "Label for the textarea showing the page title."

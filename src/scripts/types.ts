@@ -107,7 +107,6 @@ export type LocalStorageItems = {
   skipBlockDialog: boolean;
   hideBlockLinks: boolean;
   hideControl: boolean;
-  enablePathDepth: boolean;
   enableMatchingRules: boolean;
   blockWholeSite: boolean;
 
@@ -160,7 +159,6 @@ export type LocalStorageItemsBackupRestore = Pick<
   | "skipBlockDialog"
   | "hideBlockLinks"
   | "hideControl"
-  | "enablePathDepth"
   | "enableMatchingRules"
   | "linkColor"
   | "blockColor"

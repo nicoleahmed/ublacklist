@@ -19,7 +19,6 @@ export type MessageName0 =
   | "popup_unblockSiteTitle"
   | "popup_details"
   | "popup_pageURLLabel"
-  | "popup_pathDepth"
   | "popup_pageTitleLabel"
   | "popup_addedRulesLabel"
   | "popup_removedRulesLabel"

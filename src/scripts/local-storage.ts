@@ -15,7 +15,6 @@ export const defaultLocalStorageItems: Readonly<LocalStorageItems> = {
   skipBlockDialog: false,
   hideBlockLinks: false,
   hideControl: false,
-  enablePathDepth: false,
   enableMatchingRules: false,
   blockWholeSite: false,
 

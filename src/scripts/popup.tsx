@@ -102,7 +102,6 @@ const Popup: React.FC = () => {
         "ruleset",
         "blacklist",
         "subscriptions",
-        "enablePathDepth",
         "enableMatchingRules",
         "blockWholeSite",
       ]);
@@ -123,7 +122,6 @@ const Popup: React.FC = () => {
         props: {
           blockWholeSite: options.blockWholeSite,
           close: () => window.close(),
-          enablePathDepth: options.enablePathDepth,
           enableMatchingRules: options.enableMatchingRules,
           openOptionsPage,
           entryProps: {
