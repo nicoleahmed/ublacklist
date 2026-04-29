@@ -69,6 +69,7 @@ export function SerpInfoEmbeddedDialog({
           <RowItem>
             <Switch
               checked={!hideBlockedResults}
+              className={FOCUS_START_CLASS}
               id={`${id}-switch`}
               onChange={(e) => {
                 const hideBlockedResults = !e.currentTarget.checked;
@@ -90,7 +91,6 @@ export function SerpInfoEmbeddedDialog({
           <RowItem expanded>
             <IconButton
               aria-label={translate("popup_openOptionsLink")}
-              className={FOCUS_START_CLASS}
               iconURL={svgToDataURL(cog)}
               title={translate("popup_openOptionsLink")}
               onClick={() => {
