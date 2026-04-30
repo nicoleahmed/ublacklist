@@ -415,17 +415,20 @@ const buttonCommandImpl: ButtonCommandImpl = {
         2,
       )}</style>
       <button type="button">
-        <span part="block" aria-label=${context.buttonProps.blockLabel}>
-          ${iconSVG}
-        </span>
-        <span part="unblock" aria-label=${context.buttonProps.unblockLabel}>
-          ${iconSVG}
-        </span>
-        <span part="unhighlight" aria-label=${context.buttonProps.unhighlightLabel}>
-          ${iconSVG}
-        </span>
+        <span part="block">${iconSVG}</span>
+        <span part="unblock">${iconSVG}</span>
+        <span part="unhighlight">${iconSVG}</span>
       </button>
     `;
+    const labels = {
+      block: context.buttonProps.blockLabel,
+      unblock: context.buttonProps.unblockLabel,
+      unhighlight: context.buttonProps.unhighlightLabel,
+    };
+    for (const [part, label] of Object.entries(labels)) {
+      // biome-ignore lint/style/noNonNullAssertion: the span always exists
+      shadowRoot.querySelector(`[part="${part}"]`)!.ariaLabel = label;
+    }
     shadowRoot.querySelector("button")?.addEventListener("click", (event) => {
       event.stopPropagation();
       context.buttonProps.onClick(event);
@@ -493,17 +496,20 @@ const buttonCommandImpl: ButtonCommandImpl = {
         2,
       )}</style>
       <button type="button">
-        <span part="block">
-          ${context.buttonProps.blockLabel}
-        </span>
-        <span part="unblock">
-          ${context.buttonProps.unblockLabel}
-        </span>
-        <span part="unhighlight">
-          ${context.buttonProps.unhighlightLabel}
-        </span>
+        <span part="block"></span>
+        <span part="unblock"></span>
+        <span part="unhighlight"></span>
       </button>
     `;
+    const labels = {
+      block: context.buttonProps.blockLabel,
+      unblock: context.buttonProps.unblockLabel,
+      unhighlight: context.buttonProps.unhighlightLabel,
+    };
+    for (const [part, label] of Object.entries(labels)) {
+      // biome-ignore lint/style/noNonNullAssertion: the span always exists
+      shadowRoot.querySelector(`[part="${part}"]`)!.textContent = label;
+    }
     shadowRoot.querySelector("button")?.addEventListener("click", (event) => {
       event.stopPropagation();
       context.buttonProps.onClick(event);
