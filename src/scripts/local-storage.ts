@@ -1,4 +1,5 @@
 import { browser } from "./browser.ts";
+import { defaultHighlightColor } from "./constants.ts";
 import { sendMessage } from "./messages.ts";
 import { getDefault } from "./serpinfo/settings.ts";
 import type {
@@ -20,7 +21,7 @@ export const defaultLocalStorageItems: Readonly<LocalStorageItems> = {
 
   linkColor: "default",
   blockColor: "default",
-  highlightColors: ["#ddeeff"],
+  highlightColors: [defaultHighlightColor],
   dialogTheme: "default",
 
   syncCloudId: false,
